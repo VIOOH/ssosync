@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/base64"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
@@ -71,6 +72,9 @@ func (s *Secrets) getSecret(secretKey string) (string, error) {
 		}
 		secretString = string(decodedBinarySecretBytes[:l])
 	}
+
+	// Remove trailing new lines added by sops
+	secretString = strings.TrimRight(secretString, "\n")
 
 	return secretString, nil
 }
